@@ -1,8 +1,13 @@
+import unidecode
+
 # Add here all requirements for your house search
 req = {
-    'number_of_rooms': 2,  # should be non-negative integer
-    'price_from': 1e5,  # should be non-negative float
-    'price_to': 5e5,  # should be non-negative float
+    'number_of_rooms': 2,               # should be non-negative integer
+    'price_from': 1e5,                  # should be non-negative float
+    'price_to': 5e5,                    # should be non-negative float
+    'type_of_housing': 'mieszkanie',    # available are: mieszkanie, dom, pokoj, dzialka, garaz
+    'renting_vs_owning': 'sprzedaz',    # available are: sprzedaz, wynajem
+    'city': 'warszawa',                 # lowercase name of the city ascii chars (with a dash instead of spaces)
 }
 
 
@@ -56,3 +61,25 @@ class Requirements:
         except TypeError:
             raise TypeError('price_to can not be None')
         return price_to if price_to > 0 else 0
+
+    @property
+    def type_of_housing(self):
+        type_of_housing = self._get_property('type_of_housing')
+        if type_of_housing is None:
+            raise TypeError('type_of_housing can not be None')
+        return str(type_of_housing)
+
+    @property
+    def renting_vs_owning(self):
+        renting_vs_owning = self._get_property('renting_vs_owning')
+        if renting_vs_owning is None:
+            raise TypeError('renting_vs_owning can not be None')
+        return str(renting_vs_owning)
+
+    @property
+    def city(self):
+        city = self._get_property('city')
+        if city is None:
+            raise TypeError('city can not be None')
+        accented_city = str(city).strip().replace(' ', '-').lower()
+        return unidecode.unidecode(accented_city)

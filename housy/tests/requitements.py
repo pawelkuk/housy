@@ -63,6 +63,20 @@ class RequirementsTestCase(unittest.TestCase):
         self.requirements._requirements['price_to'] = positive_number
         self.assertEqual(self.requirements.price_to, positive_number)
 
+    def test_city_handles_None(self):
+        self.requirements._requirements['city'] = None
+        with self.assertRaises(TypeError):
+            tmp = self.requirements.city
+
+    def test_city_handles_correct_str(self):
+        city = 'warszawa'
+        self.requirements._requirements['city'] = city
+        self.assertEqual(self.requirements.city, city)
+
+    def test_city_handles_incorrect_str(self):
+        self.requirements._requirements['city'] = ' Zielona Góra   '
+        self.assertEqual(self.requirements.city, 'zielona-gora')
+
 
 if __name__ == '__main__':
     unittest.main()
