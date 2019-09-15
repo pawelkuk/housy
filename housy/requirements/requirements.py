@@ -1,5 +1,5 @@
 # Add here all requirements for your house search
-requirements = {
+req = {
     'number_of_rooms': 2,
     'price_from': 1e5,
     'price_to': 5e5,
@@ -19,7 +19,7 @@ class Requirements:
 
     """
 
-    def __init__(self):
+    def __init__(self, requirements):
         self._requirements = requirements  # set it to conf
 
     def _get_property(self, property_name):
@@ -33,6 +33,8 @@ class Requirements:
             number_of_rooms = int(self._get_property('number_of_rooms'))
         except ValueError:
             raise ValueError('number_of_rooms could no be converted to int')
+        except TypeError:
+            raise TypeError('number_of_rooms can not be None')
         return number_of_rooms if number_of_rooms > 0 else 0
 
     @property
@@ -41,6 +43,8 @@ class Requirements:
             price_from = float(self._get_property('price_from'))
         except ValueError:
             raise ValueError('price_from could no be converted to float')
+        except TypeError:
+            raise TypeError('price_from can not be None')
         return price_from if price_from > 0 else 0
 
     @property
@@ -49,4 +53,6 @@ class Requirements:
             price_to = float(self._get_property('price_to'))
         except ValueError:
             raise ValueError('price_to could no be converted to float')
+        except TypeError:
+            raise TypeError('price_to can not be None')
         return price_to if price_to > 0 else 0
