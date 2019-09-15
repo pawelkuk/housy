@@ -1,8 +1,8 @@
 # Add here all requirements for your house search
 req = {
-    'number_of_rooms': 2,
-    'price_from': 1e5,
-    'price_to': 5e5,
+    'number_of_rooms': 2,  # should be non-negative integer
+    'price_from': 1e5,  # should be non-negative float
+    'price_to': 5e5,  # should be non-negative float
 }
 
 
