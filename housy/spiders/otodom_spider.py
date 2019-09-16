@@ -50,3 +50,4 @@ class OtodomSpider(scrapy.Spider):
         cal = Calendar()
         offer_submission_date = cal.parse(processed_date)
         otodom_req = OtodomRequirements(req)
+        # TODO crawler should return file with urls which meet requirements
