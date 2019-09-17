@@ -26,7 +26,9 @@ class OtodomSpider(scrapy.Spider):
         for offer in offers:
             yield response.follow(url=offer.attrib['data-url'], callback=self.parse_offer)
         # follow pagination link
-        yield response.follow(response.xpath("//a[@data-dir='next']").attrib['href'], self.parse)
+        # TODO this yield needs to be done in a customizable way (has to work for other numbers than '9'
+        if response.url[-1] != '9':
+            yield response.follow(response.xpath("//a[@data-dir='next']").attrib['href'], self.parse)
 
     def parse_offer(self, response):
         """Extracts the details of the offer to search through."""
