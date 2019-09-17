@@ -8,6 +8,11 @@ req = {
     'type_of_housing': 'mieszkanie',    # available are: mieszkanie, dom, pokoj, dzialka, garaz
     'renting_vs_owning': 'sprzedaz',    # available are: sprzedaz, wynajem
     'city': 'warszawa',                 # lowercase name of the city ascii chars (with a dash instead of spaces)
+    'tags': [                           # words the offer has to contain
+        'oddziel',
+        'rozkl',
+    ],
+    'number_of_days': 2,                # number of days the offer stands on the website
 }
 
 
@@ -83,3 +88,23 @@ class Requirements:
             raise TypeError('city can not be None')
         accented_city = str(city).strip().replace(' ', '-').lower()
         return unidecode.unidecode(accented_city)
+
+    @property
+    def tags(self):
+        tags = self._get_property('tags')
+        if tags is None:
+            raise TypeError('tags can not be None')
+        if len(tags) > 0:
+            accented_tags = [str(tag).strip().lower() for tag in tags]
+            return [unidecode.unidecode(accented_tag) for accented_tag in accented_tags]
+        return []
+
+    @property
+    def number_of_days(self):
+        try:
+            number_of_days = int(self._get_property('number_of_days'))
+        except ValueError:
+            raise ValueError('number_of_days could no be converted to int')
+        except TypeError:
+            raise TypeError('number_of_days can not be None')
+        return number_of_days if number_of_days > 0 else 0

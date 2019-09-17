@@ -77,6 +77,14 @@ class RequirementsTestCase(unittest.TestCase):
         self.requirements._requirements['city'] = ' Zielona Góra   '
         self.assertEqual(self.requirements.city, 'zielona-gora')
 
+    def test_tags_handels_incorrect_str(self):
+        self.requirements._requirements['tags'] = [' Zielona Góra   ', 'Rozkładowę']
+        self.assertEqual(self.requirements.tags, ['zielona gora', 'rozkladowe'])
+
+    def test_tags_are_empty(self):
+        self.requirements._requirements['tags'] = []
+        self.assertEqual(self.requirements.tags, [])
+
 
 if __name__ == '__main__':
     unittest.main()
