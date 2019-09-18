@@ -1,11 +1,11 @@
 import scrapy
-from unidecode import unidecode
 from parsedatetime import Calendar
 import os
 
 from housy.requirements.requirements import req
 from housy.requirements.otodom import OtodomRequirements
 from housy.url_generator.url_generator import OtodomUrlGenerator
+from housy.processing.text_processing import get_processed_text, calculate_intersection
 
 
 class OtodomSpider(scrapy.Spider):
@@ -32,20 +32,6 @@ class OtodomSpider(scrapy.Spider):
 
     def parse_offer(self, response):
         """Extracts the details of the offer to search through."""
-        def get_processed_text(list_of_str):
-            """Storing str in list to avoid memory coping."""
-            tmp_list = []
-            for raw_str_bit in list_of_str:
-                accented_str_bit = raw_str_bit.get().strip().lower()
-                str_bit = unidecode(accented_str_bit)
-                tmp_list.append(str_bit)
-            return ' '.join(tmp_list)
-
-        def calculate_intersection(text_to_look_through, words_to_search):
-            number_of_words_to_search = len(words_to_search)
-            number_of_words_present = sum([1 for word in words_to_search if word in text_to_look_through])
-            return number_of_words_present/number_of_words_to_search
-
         # Extract date of offer submission
         # We don't want an offer which is too old
         unprocessed_date = response.xpath("//div[@class='css-lh1bxu']").get()
@@ -57,10 +43,9 @@ class OtodomSpider(scrapy.Spider):
         required_date = cal.parse(' '.join([str(otodom_req.number_of_days), 'days ago']))
         if offer_submission_date < required_date:
             return
-
-        li = response.xpath("//li/text()")
+        li = response.xpath("//li/text()").get()
         li_text = get_processed_text(li)
-        p = response.xpath("//p/text()")
+        p = response.xpath("//p/text()").get()
         p_text = get_processed_text(p)
         text = ' '.join([li_text, p_text])
         if calculate_intersection(text, otodom_req.tags) >= otodom_req.threshold:
