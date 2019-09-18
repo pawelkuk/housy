@@ -85,6 +85,30 @@ class RequirementsTestCase(unittest.TestCase):
         self.requirements._requirements['tags'] = []
         self.assertEqual(self.requirements.tags, [])
 
+    def test_threshold_handles_None(self):
+        self.requirements._requirements['threshold'] = None
+        with self.assertRaises(TypeError):
+            tmp = self.requirements.threshold
+
+    def test_threshold_handles_str(self):
+        self.requirements._requirements['threshold'] = 'ten'
+        with self.assertRaises(ValueError):
+            tmp = self.requirements.threshold
+
+    def test_threshold_handles_negative_numbers(self):
+        self.requirements._requirements['threshold'] = -10
+        self.assertEqual(self.requirements.threshold, 0)
+
+    def test_threshold_handles_positive_numbers(self):
+        positive_number = 0.5
+        self.requirements._requirements['threshold'] = positive_number
+        self.assertEqual(self.requirements.threshold, positive_number)
+
+    def test_threshold_handles_greater_then_1(self):
+        positive_number = 1.3
+        self.requirements._requirements['threshold'] = positive_number
+        self.assertEqual(self.requirements.threshold, 1.0)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -12,6 +12,7 @@ req = {
         'oddziel',
         'rozkl',
     ],
+    'threshold': 0.33,                  # the fraction of the words (in tags) which has to appear in the offer
     'number_of_days': 2,                # number of days the offer stands on the website
 }
 
@@ -108,3 +109,13 @@ class Requirements:
         except TypeError:
             raise TypeError('number_of_days can not be None')
         return number_of_days if number_of_days > 0 else 0
+
+    @property
+    def threshold(self):
+        try:
+            threshold = float(self._get_property('threshold'))
+        except ValueError:
+            raise ValueError('threshold could no be converted to float')
+        except TypeError:
+            raise TypeError('threshold can not be None')
+        return min(1.0, threshold) if threshold > 0 else 0

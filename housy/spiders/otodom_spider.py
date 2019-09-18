@@ -63,8 +63,7 @@ class OtodomSpider(scrapy.Spider):
         p = response.xpath("//p/text()")
         p_text = get_processed_text(p)
         text = ' '.join([li_text, p_text])
-        threshold = 0.99  # TODO add threshold to requirements
-        if calculate_intersection(text, otodom_req.tags) >= threshold:
+        if calculate_intersection(text, otodom_req.tags) >= otodom_req.threshold:
             script_directory = os.path.dirname(os.path.realpath(__file__))
             tmp_path = os.path.realpath(script_directory).split('/')
             tmp_path = '/'.join(tmp_path[:(len(tmp_path)-1)])
