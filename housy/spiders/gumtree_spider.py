@@ -1,10 +1,13 @@
+import os
+import logging
+
 import scrapy
 from parsedatetime import Calendar
 
 from housy.requirements.gumtree import GumtreeRequirements
 from housy.requirements.requirements import req
 from housy.url_generator.url_generator import GumtreeUrlGenerator
-from housy.processing.text_processing import extract_date
+from housy.processing.text_processing import extract_date, get_processed_text, calculate_intersection
 
 
 class GumtreeSpider(scrapy.Spider):
@@ -40,4 +43,28 @@ class GumtreeSpider(scrapy.Spider):
 
     def parse_offer(self, response):
         """Extracts the details of the offer to search through."""
-        pass
+        unprocessed_date = response.css(
+            '#wrapper > div:nth-child(1) > div.vip-header-and-details > div.vip-details'
+            ' > ul > li:nth-child(1) > div > span.value').get()
+        (_, unprocessed_date, _) = unprocessed_date.split('>')
+        (processed_date, _) = unprocessed_date.split('<')
+        gumtree_req = GumtreeRequirements(req)
+        cal = Calendar()
+        offer_submission_date = cal.parse(processed_date)
+        required_date = cal.parse(' '.join([str(gumtree_req.number_of_days), 'days ago']))
+        if offer_submission_date < required_date:
+            return
+        spans = response.xpath("//span[@class='value']").getall()
+        spans_text = get_processed_text(spans)
+        p = response.xpath("//span[@class='pre']").getall()
+        p_text = get_processed_text(p)
+        text = ' '.join([spans_text, p_text])
+        if calculate_intersection(text, gumtree_req.tags) >= gumtree_req.threshold:
+            script_directory = os.path.dirname(os.path.realpath(__file__))
+            tmp_path = os.path.realpath(script_directory).split('/')
+            tmp_path = '/'.join(tmp_path[:(len(tmp_path)-1)])
+            path = '/'.join([tmp_path, 'scrapy-data/urls.txt'])
+            with open(file=path, mode='a') as f:
+                f.write(response.url)
+                f.write('\n')
+

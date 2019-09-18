@@ -1,3 +1,5 @@
+import logging
+
 import scrapy
 from parsedatetime import Calendar
 import os
@@ -43,9 +45,9 @@ class OtodomSpider(scrapy.Spider):
         required_date = cal.parse(' '.join([str(otodom_req.number_of_days), 'days ago']))
         if offer_submission_date < required_date:
             return
-        li = response.xpath("//li/text()").get()
+        li = response.xpath("//li/text()").getall()
         li_text = get_processed_text(li)
-        p = response.xpath("//p/text()").get()
+        p = response.xpath("//p/text()").getall()
         p_text = get_processed_text(p)
         text = ' '.join([li_text, p_text])
         if calculate_intersection(text, otodom_req.tags) >= otodom_req.threshold:
