@@ -4,6 +4,7 @@ import logging
 import scrapy
 from parsedatetime import Calendar
 
+from housy.processing.file_operation import append_to_file
 from housy.requirements.gumtree import GumtreeRequirements
 from housy.requirements.requirements import req
 from housy.url_generator.url_generator import GumtreeUrlGenerator
@@ -60,11 +61,6 @@ class GumtreeSpider(scrapy.Spider):
         p_text = get_processed_text(p)
         text = ' '.join([spans_text, p_text])
         if calculate_intersection(text, gumtree_req.tags) >= gumtree_req.threshold:
-            script_directory = os.path.dirname(os.path.realpath(__file__))
-            tmp_path = os.path.realpath(script_directory).split('/')
-            tmp_path = '/'.join(tmp_path[:(len(tmp_path)-1)])
-            path = '/'.join([tmp_path, 'scrapy-data/urls.txt'])
-            with open(file=path, mode='a') as f:
-                f.write(response.url)
-                f.write('\n')
+            append_to_file(path='scrapy-data/urls.txt', response=response)
+
 

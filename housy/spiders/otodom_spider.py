@@ -4,6 +4,7 @@ import scrapy
 from parsedatetime import Calendar
 import os
 
+from housy.processing.file_operation import append_to_file
 from housy.requirements.requirements import req
 from housy.requirements.otodom import OtodomRequirements
 from housy.url_generator.url_generator import OtodomUrlGenerator
@@ -51,10 +52,5 @@ class OtodomSpider(scrapy.Spider):
         p_text = get_processed_text(p)
         text = ' '.join([li_text, p_text])
         if calculate_intersection(text, otodom_req.tags) >= otodom_req.threshold:
-            script_directory = os.path.dirname(os.path.realpath(__file__))
-            tmp_path = os.path.realpath(script_directory).split('/')
-            tmp_path = '/'.join(tmp_path[:(len(tmp_path)-1)])
-            path = '/'.join([tmp_path, 'scrapy-data/urls.txt'])
-            with open(file=path, mode='a') as f:
-                f.write(response.url)
-                f.write('\n')
+            append_to_file(path='scrapy-data/urls.txt', response=response)
+

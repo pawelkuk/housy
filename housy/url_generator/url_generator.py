@@ -43,3 +43,24 @@ class GumtreeUrlGenerator(AbsUrlGenerator):
                       'nr': self.requirements.number_of_rooms,
                       }
         return url + urllib.parse.urlencode(query_args, doseq=True).replace('&pr=', ',')
+
+
+class MorizonUrlGenerator(AbsUrlGenerator):
+    def generate_url(self):
+        morizon_specific_mapper = {
+            'mieszkanie': 'mieszkania',
+            'dom': 'domy'
+        }
+        url = '/'.join([
+            'https://www.morizon.pl',
+            morizon_specific_mapper[self.requirements.type_of_housing],
+            'najnowsze',
+            self.requirements.city,
+            '?'
+        ])
+        query_args = {'ps[price_from]': int(self.requirements.price_from),
+                      'ps[price_to]': int(self.requirements.price_to),
+                      'ps[number_of_rooms_from]': self.requirements.number_of_rooms,
+                      'ps[number_of_rooms_to]': self.requirements.number_of_rooms,
+                      }
+        return url + urllib.parse.urlencode(query_args)

@@ -1,4 +1,6 @@
 from unidecode import unidecode
+from parsedatetime import Calendar
+import re
 
 
 def get_processed_text(list_of_str):
@@ -37,3 +39,17 @@ def extract_date(gumtree_unprocessed_date):
         return ' '.join(['1', translation[time_list[0]], 'ago'])
     else:
         return ' '.join([time_list[0], translation[time_list[1]], 'ago'])
+
+
+def extract_from_tag(text_in_tag):
+    return re.sub(r'<(div|/div|br|p|/p|span|/span)[^>]*>', '', text_in_tag)
+
+
+def morizon_convert_to_time_struct(date_str):
+    morizon_date_mapper = {
+        'dzisiaj': 'today',
+        'wczoraj': 'yesterday'
+    }
+    cal = Calendar()
+    date_str = morizon_date_mapper[date_str] if date_str in morizon_date_mapper else date_str
+    return cal.parse(date_str)[0]

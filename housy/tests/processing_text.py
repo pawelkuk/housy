@@ -1,4 +1,4 @@
-from housy.processing.text_processing import calculate_intersection, get_processed_text, extract_date
+from housy.processing.text_processing import calculate_intersection, get_processed_text, extract_date, extract_from_tag
 
 
 def test_processed_text_handles_empty_list():
@@ -71,3 +71,9 @@ def test_extract_date_from_polish_from_1_day_ago():
 def test_extract_date_from_polish_from_2_days_ago():
     test_input = '<div class="creation-date"><span>2 dni temu</span></div>'
     assert extract_date(test_input) == '2 days ago'
+
+
+def test_extracts_from_tag_properly_valid_case():
+    test_input = '<div class="some boring class md col whatever">this is an important message</div>'
+    assert extract_from_tag(test_input) == 'this is an important message'
+
