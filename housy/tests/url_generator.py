@@ -8,6 +8,8 @@ class UrlGeneratorTestCase(unittest.TestCase):
         self.requirements = Requirements(req)
         self.requirements._requirements['price_to'] = 500000.0
         self.requirements._requirements['price_from'] = 100000.0
+        self.requirements._requirements['number_of_rooms'] = 2
+        self.requirements._requirements['city'] = 'warszawa'
         self.otodom = OtodomUrlGenerator(self.requirements)
         self.gumtree = GumtreeUrlGenerator(self.requirements)
         self.morizon = MorizonUrlGenerator(self.requirements)
