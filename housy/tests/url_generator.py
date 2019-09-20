@@ -1,6 +1,7 @@
 import unittest
 from housy.requirements.requirements import Requirements, req
-from housy.url_generator.url_generator import OtodomUrlGenerator, GumtreeUrlGenerator, MorizonUrlGenerator
+from housy.url_generator.url_generator import OtodomUrlGenerator, GumtreeUrlGenerator, MorizonUrlGenerator, \
+    OlxUrlGenerator
 
 
 class UrlGeneratorTestCase(unittest.TestCase):
@@ -13,6 +14,7 @@ class UrlGeneratorTestCase(unittest.TestCase):
         self.otodom = OtodomUrlGenerator(self.requirements)
         self.gumtree = GumtreeUrlGenerator(self.requirements)
         self.morizon = MorizonUrlGenerator(self.requirements)
+        self.olx = OlxUrlGenerator(self.requirements)
 
     def test_otodom_url_with_correct_reqs_is_generated(self):
         url = self.otodom.generate_url()
@@ -35,6 +37,14 @@ class UrlGeneratorTestCase(unittest.TestCase):
                        'ps%5Bprice_to%5D=500000&' \
                        'ps%5Bnumber_of_rooms_from%5D=2&' \
                        'ps%5Bnumber_of_rooms_to%5D=2'
+        self.assertEqual(url, expected_url)
+
+    def test_olx_url_with_correct_reqs_is_generated(self):
+        url = self.olx.generate_url()
+        expected_url = 'https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/warszawa/?'\
+                       'search%5Bfilter_float_price%3Afrom%5D=100000'\
+                       '&search%5Bfilter_float_price%3Ato%5D=500000'\
+                       '&search%5Bfilter_enum_rooms%5D%5B0%5D=two'
         self.assertEqual(url, expected_url)
 
 

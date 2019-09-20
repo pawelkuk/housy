@@ -53,3 +53,26 @@ def morizon_convert_to_time_struct(date_str):
     cal = Calendar()
     date_str = morizon_date_mapper[date_str] if date_str in morizon_date_mapper else date_str
     return cal.parse(date_str)[0]
+
+
+def olx_convert_to_time_struct(date_str):
+    olx_date_mapper = {
+        'dzisiaj': 'today',
+        'wczoraj': 'yesterday',
+        'sty': 'january',
+        'wrz': 'september',
+        'lut': 'february',
+        'mar': 'march',
+        'kwi': 'april',
+        'maj': 'may',
+        'cze': 'june',
+        'lip': 'july',
+        'sie': 'august',
+        'paź': 'october',
+        'lis': 'november',
+        'gru': 'december',
+    }
+    for k, v in olx_date_mapper.items():
+        date_str = date_str.replace(k, v)
+    cal = Calendar()
+    return cal.parse(date_str)[0]

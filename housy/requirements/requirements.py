@@ -13,7 +13,7 @@ req = {
         'rozkl',
     ],
     'threshold': 0.1,                  # the fraction of the words (in tags) which has to appear in the offer
-    'number_of_days': 2,                # number of days the offer stands on the website
+    'number_of_days': 1,                # number of days the offer stands on the website
 }
 
 

@@ -1,6 +1,7 @@
 import abc
 import urllib.parse
 import json
+import inflect
 
 
 class AbsUrlGenerator(metaclass=abc.ABCMeta):
@@ -62,5 +63,27 @@ class MorizonUrlGenerator(AbsUrlGenerator):
                       'ps[price_to]': int(self.requirements.price_to),
                       'ps[number_of_rooms_from]': self.requirements.number_of_rooms,
                       'ps[number_of_rooms_to]': self.requirements.number_of_rooms,
+                      }
+        return url + urllib.parse.urlencode(query_args)
+
+
+class OlxUrlGenerator(AbsUrlGenerator):
+    def generate_url(self):
+        p = inflect.engine()
+        olx_specific_mapper = {
+            'mieszkanie': 'mieszkania',
+            'dom': 'domy'
+        }
+        url = '/'.join([
+            'https://www.olx.pl',
+            'nieruchomosci',
+            olx_specific_mapper[self.requirements.type_of_housing],
+            self.requirements.renting_vs_owning,
+            self.requirements.city,
+            '?'
+        ])
+        query_args = {'search[filter_float_price:from]': int(self.requirements.price_from),
+                      'search[filter_float_price:to]': int(self.requirements.price_to),
+                      'search[filter_enum_rooms][0]': p.number_to_words(self.requirements.number_of_rooms),
                       }
         return url + urllib.parse.urlencode(query_args)

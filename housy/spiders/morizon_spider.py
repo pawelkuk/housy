@@ -34,6 +34,8 @@ class MorizonSpider(scrapy.Spider):
         latest_date = response.xpath("//span[@class='single-result__category single-result__category--date']")\
                               .getall()\
                               .pop()
+        # the strong word appears in the rag when the date is in bold (and it's only bold when the offer has just been
+        # added, hence there is no sense in finding out whether is't an old offer
         if 'strong' not in latest_date:
             morizon_req = MorizonRequirements(req)
             cal = Calendar()
