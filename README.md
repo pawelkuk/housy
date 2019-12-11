@@ -1,7 +1,7 @@
-#housy
+# housy
 App for scraping websites with house pricing information.
 
-####Get started:
+#### Get started:
 1. Download the repo.
 2. Go to the main app directory.
 3. Type:
